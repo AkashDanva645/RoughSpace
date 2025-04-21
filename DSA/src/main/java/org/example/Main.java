@@ -1,66 +1,70 @@
 package org.example;
 
+import java.util.Stack;
 
-class SegmentTree {
-    private int[] tree;
-    private int n;
+class Solution {
 
-    public SegmentTree(int[] arr) {
-        this.n = arr.length;
-        this.tree = new int[4 * n];
-        build(arr, 0, 0, n - 1);
-    }
-
-    private void build(int[] arr, int node, int start, int end) {
-        if (start == end) {
-            tree[node] = arr[start];
-        } else {
-            int mid = (start + end) / 2;
-            build(arr, 2 * node + 1, start, mid);
-            build(arr, 2 * node + 2, mid + 1, end);
-            tree[node] = tree[2*node + 1] + tree[2*node + 2];
+    private void popWord(Stack<String> stac) {
+        if (stac.peek().equals(String.valueOf('/'))) {
+            stac.pop();
         }
+        if (!stac.isEmpty()) stac.pop();
     }
 
-    public int query(int l, int r) {
-        return query(0, 0, n - 1, l, r);
-    }
-
-    private int query(int node, int start, int end, int l, int r) {
-        if (l > end || r < start) return 0; // no overlap
-        if (l <= start && end <= r) return tree[node]; // total overlap
-        // partial overlap
-        int mid = (start + end) / 2;
-        int leftSum = query(2 * node + 1, start, mid, l, r);
-        int rightSum = query(2 * node + 2, mid + 1, end, l, r);
-        return leftSum + rightSum;
-    }
-
-    public void update(int index, int value) {
-        update(0, 0, n - 1, index, value);
-    }
-
-    private void update(int node, int start, int end, int index, int value) {
-        if (start == end) {
-            tree[node] = value;
-        } else {
-            int mid = (start + end) / 2;
-            if (index <= mid) {
-                update(2 * node + 1, start, mid, index, value);
-            } else {
-                update(2 * node + 2, mid + 1, end, index, value);
+    public String simplifyPath(String path) {
+        Stack<String> stac = new Stack<>();
+        int n = path.length();
+        int i = 0;
+        while (i < n) {
+            StringBuilder sb = new StringBuilder();
+            while (i < n && '/' != path.charAt(i)) {
+                sb.append(path.charAt(i));
+                i++;
             }
-            tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
+            if (sb.length() > 0) {
+                stac.add(sb.toString());
+            }
+            i++;
         }
+
+        Stack<String> ansStac = new Stack<>();
+
+        while (!stac.isEmpty()) {
+            int pop = 0;
+
+            while (!stac.isEmpty() && stac.peek().equals("..")) {
+                stac.pop();
+                pop++;
+            }
+
+            while (!stac.isEmpty() && pop > 0) {
+                if (!stac.peek().equals(".")) {
+                    pop--;
+                }
+                stac.pop();
+            }
+
+            if (!stac.isEmpty()) {
+                if (!stac.peek().equals(".")) {
+                    ansStac.push(stac.peek());
+                }
+                stac.pop();
+            }
+        }
+
+        StringBuilder ans = new StringBuilder();
+        while (!ansStac.isEmpty()) {
+            ans.append("/");
+            ans.append(ansStac.pop());
+        }
+
+        return ans.toString().length() == 0 ? "/" : ans.toString();
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        int arr[] = new int[]{2, 3, -1, 5, -2, 4, 8, 10};
-        SegmentTree st = new SegmentTree(arr);
-        System.out.println(st.query(1, 5));
-        st.update(2, 10);
-        System.out.println(st.query(1, 5));
+        Solution sol = new Solution();
+        System.out.println(sol.simplifyPath("/a/../../b/../c//.//"));
     }
 }
