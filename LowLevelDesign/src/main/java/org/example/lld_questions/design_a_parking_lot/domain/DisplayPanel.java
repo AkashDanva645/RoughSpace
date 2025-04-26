@@ -3,6 +3,7 @@ package org.example.lld_questions.design_a_parking_lot.external;
 import lombok.Getter;
 
 public class DisplayPanel implements Runnable {
+
     private int id;
 
     @Getter
@@ -17,7 +18,7 @@ public class DisplayPanel implements Runnable {
     }
 
     public void changeMessage(String msg) {
-
+        this.message = msg;
     }
 
     @Override
