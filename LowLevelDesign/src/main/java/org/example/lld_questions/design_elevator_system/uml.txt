@@ -1,0 +1,56 @@
+@startuml
+
+
+interface ElevatorState {
++ allowDoorOpen()
++ run()
+}
+
+class UpState implements ElevatorState {
++ allowDoorOpen()
++ run()
+}
+
+class DownState implements ElevatorState {
++ allowDoorOpen()
++ run()
+}
+
+class IdleState implements ElevatorState {
++ allowDoorOpen()
++ run()
+}
+
+class Display {
+- elevator: Elevator
++ getStatus()
++ setStatus()
+}
+
+interface OutdoorPanel {
+- smartDispatcher: SmartDispatcher
+- dispatchEvent(): void
++ pressUp()
++ pressDown()
+}
+
+interface IndoorPanel {
+- smartDispatcher: SmartDispatcher
+- dispatchEvent(): void
++ pressFloor(x: int)
++ pressDoorOpen()
++ pressDoorClose()
+}
+
+class Elevator {
++ state: ElevatorState
++ destinations: TreeSet<Integer>
++ currFloor: int
++ capacity: int
++ passengerCount: int
++ isDoorOpen: boolean
++ isLimitExceeded()
+}
+
+
+@enduml
