@@ -23,7 +23,7 @@ class UpState implements ElevatorState, Runnable {
 
     @Override
     public void run() {
-        while (elevator.currFloor != elevator.destination) {
+        while (elevator.currFloor != elevator.destinations.last()) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -32,6 +32,7 @@ class UpState implements ElevatorState, Runnable {
             elevator.currFloor++;
             System.out.println(this.elevator.name + " is at Floor -> " + elevator.currFloor);
         }
+        elevator.destinations.pollLast();
     }
 }
 
@@ -51,7 +52,7 @@ class DownState implements ElevatorState, Runnable {
 
     @Override
     public void run() {
-        while (elevator.currFloor != elevator.destination) {
+        while (elevator.currFloor != elevator.destinations.first()) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -60,14 +61,13 @@ class DownState implements ElevatorState, Runnable {
             elevator.currFloor--;
             System.out.println(this.elevator.name + " is at Floor -> " + elevator.currFloor);
         }
+        elevator.destinations.pollFirst();
     }
 }
-
 
 class IdleState {
 
 }
-
 
 class Elevator {
     String name;

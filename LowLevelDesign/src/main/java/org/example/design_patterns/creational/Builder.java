@@ -50,7 +50,6 @@ class House {
 
 
 
-
 public class Builder {
     public static void main(String[] args) {
         House house = House.builder()
